@@ -1,0 +1,44 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Obter Localização</title>
+</head>
+<body>
+    <button onclick="getLocation()">Obter Localização</button>
+
+    <script>
+        function getLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(showPosition);
+            } else {
+                alert("Geolocalização não é suportada pelo seu navegador.");
+            }
+        }
+
+        function showPosition(position) {
+            const latitude = position.coords.latitude;
+            const longitude = position.coords.longitude;
+
+            // Enviar para o backend usando Fetch API
+            fetch('http://127.0.0.1:5000/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ latitude, longitude })
+            })
+            .then(response => {
+                if (response.ok) {
+                    alert('Localização enviada com sucesso para o backend.');
+                } else {
+                    alert('Falha ao enviar a localização para o backend.');
+                }
+            })
+            .catch(error => {
+                alert('Erro ao enviar a localização para o backend:', error);
+            });
+        }
+    </script>
+</body>
+</html>
